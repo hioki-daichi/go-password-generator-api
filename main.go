@@ -13,7 +13,7 @@ func main() {
 		log.Fatalf(err.Error())
 	}
 
-	json, err := e.Execute(`{ hello }`)
+	json, err := e.Execute(`{ hello(name: "Daichi Hioki") }`)
 	if err != nil {
 		log.Fatalf(err.Error())
 	}

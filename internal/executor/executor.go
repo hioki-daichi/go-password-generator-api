@@ -22,8 +22,11 @@ func NewExecutor() (*Executor, error) {
 					Fields: graphql.Fields{
 						"hello": &graphql.Field{
 							Type: graphql.String,
+							Args: graphql.FieldConfigArgument{
+								"name": &graphql.ArgumentConfig{Type: graphql.String, Description: "Name"},
+							},
 							Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-								return "Hello, World!", nil
+								return ("Hello, " + p.Args["name"].(string) + "!"), nil
 							},
 						},
 					},
