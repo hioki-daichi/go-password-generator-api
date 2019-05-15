@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/hioki-daichi/password-generator-api/internal/executor"
 )
@@ -13,7 +14,9 @@ func main() {
 		log.Fatalf(err.Error())
 	}
 
-	json, err := e.Execute(`{ password(useNumber: true) }`)
+	requestString := os.Args[1] // e.g. `{ password(useNumber: true) }`
+
+	json, err := e.Execute(requestString)
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
