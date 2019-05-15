@@ -25,6 +25,7 @@ func NewExecutor() (*Executor, error) {
 							Type: graphql.String,
 							Args: graphql.FieldConfigArgument{
 								"useNumber": &graphql.ArgumentConfig{Type: graphql.Boolean, DefaultValue: false, Description: "Use Number"},
+								"useSign":   &graphql.ArgumentConfig{Type: graphql.Boolean, DefaultValue: false, Description: "Use Sign"},
 							},
 							Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 								return generator.NewGenerator(p).Generate(), nil

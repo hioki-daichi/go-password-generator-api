@@ -14,12 +14,14 @@ const (
 // Generator has the information needed to generate password.
 type Generator struct {
 	useNumber bool
+	useSign   bool
 }
 
 // NewGenerator initializes Generator.
 func NewGenerator(p graphql.ResolveParams) *Generator {
 	return &Generator{
 		useNumber: p.Args["useNumber"].(bool),
+		useSign:   p.Args["useSign"].(bool),
 	}
 }
 
@@ -51,7 +53,7 @@ func (g *Generator) Generate() interface{} {
 			),
 		)]
 
-		keys := f.keys(g.useNumber)
+		keys := f.keys(g.useNumber, g.useSign)
 		idx := rand.Intn(len(keys))
 		ret += keys[idx : idx+1]
 	}

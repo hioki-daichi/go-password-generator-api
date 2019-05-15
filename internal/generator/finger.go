@@ -13,7 +13,7 @@ const (
 	rChild
 )
 
-func (f finger) keys(useNumber bool) string {
+func (f finger) keys(useNumber bool, useSign bool) string {
 	var keys string
 
 	switch f {
@@ -43,19 +43,28 @@ func (f finger) keys(useNumber bool) string {
 			keys += "67"
 		}
 	case rMiddle:
-		keys += "ik,"
+		keys += "ik"
 		if useNumber {
 			keys += "8"
 		}
+		if useSign {
+			keys += ","
+		}
 	case rRing:
-		keys += "ol."
+		keys += "ol"
 		if useNumber {
 			keys += "9"
 		}
+		if useSign {
+			keys += "."
+		}
 	case rChild:
-		keys += "p;/"
+		keys += "p"
 		if useNumber {
 			keys += "0"
+		}
+		if useSign {
+			keys += ";/"
 		}
 	}
 
