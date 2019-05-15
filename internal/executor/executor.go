@@ -25,13 +25,6 @@ func NewExecutor() (*Executor, error) {
 				graphql.ObjectConfig{
 					Name: "RootQuery",
 					Fields: graphql.Fields{
-						"hello": &graphql.Field{
-							Type: graphql.String,
-							Args: graphql.FieldConfigArgument{
-								"name": &graphql.ArgumentConfig{Type: graphql.String, Description: "Name"},
-							},
-							Resolve: hello,
-						},
 						"password": &graphql.Field{
 							Type: graphql.String,
 							Args: graphql.FieldConfigArgument{
@@ -62,10 +55,6 @@ func (e *Executor) Execute(requestString string) ([]byte, error) {
 	}
 
 	return json.Marshal(result)
-}
-
-func hello(p graphql.ResolveParams) (interface{}, error) {
-	return ("Hello, " + p.Args["name"].(string) + "!"), nil
 }
 
 func password(p graphql.ResolveParams) (interface{}, error) {
