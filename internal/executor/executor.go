@@ -25,9 +25,7 @@ func NewExecutor() (*Executor, error) {
 							Args: graphql.FieldConfigArgument{
 								"name": &graphql.ArgumentConfig{Type: graphql.String, Description: "Name"},
 							},
-							Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-								return ("Hello, " + p.Args["name"].(string) + "!"), nil
-							},
+							Resolve: hello,
 						},
 					},
 				},
@@ -52,4 +50,8 @@ func (e *Executor) Execute(requestString string) ([]byte, error) {
 	}
 
 	return json.Marshal(result)
+}
+
+func hello(p graphql.ResolveParams) (interface{}, error) {
+	return ("Hello, " + p.Args["name"].(string) + "!"), nil
 }
