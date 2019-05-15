@@ -53,10 +53,80 @@ func (g *Generator) Generate() interface{} {
 			),
 		)]
 
-		keys := f.keys(g.useNumber, g.useSign)
-		idx := rand.Intn(len(keys))
-		ret += keys[idx : idx+1]
+		ret += g.randomKey(f)
 	}
 
 	return ret
+}
+
+type finger int
+
+const (
+	lIndex finger = iota
+	lMiddle
+	lRing
+	lChild
+	rIndex
+	rMiddle
+	rRing
+	rChild
+)
+
+func (g *Generator) randomKey(f finger) string {
+	var keys string
+
+	switch f {
+	case lIndex:
+		keys += "tgbrfv"
+		if g.useNumber {
+			keys += "54"
+		}
+	case lMiddle:
+		keys += "edc"
+		if g.useNumber {
+			keys += "3"
+		}
+	case lRing:
+		keys += "wsx"
+		if g.useNumber {
+			keys += "2"
+		}
+	case lChild:
+		keys += "qaz"
+		if g.useNumber {
+			keys += "1"
+		}
+	case rIndex:
+		keys += "yhnujm"
+		if g.useNumber {
+			keys += "67"
+		}
+	case rMiddle:
+		keys += "ik"
+		if g.useNumber {
+			keys += "8"
+		}
+		if g.useSign {
+			keys += ","
+		}
+	case rRing:
+		keys += "ol"
+		if g.useNumber {
+			keys += "9"
+		}
+		if g.useSign {
+			keys += "."
+		}
+	case rChild:
+		keys += "p"
+		if g.useNumber {
+			keys += "0"
+		}
+		if g.useSign {
+			keys += ";/"
+		}
+	}
+
+	randomIndex := rand.Intn(len(keys))
+	return keys[randomIndex : randomIndex+1]
 }
