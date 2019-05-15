@@ -3,9 +3,19 @@ package executor
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
+	"time"
 
 	"github.com/graphql-go/graphql"
 )
+
+const (
+	passwordLength = 16
+)
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
 
 // Executor has the information needed to run GraphQL.
 type Executor struct {
@@ -26,6 +36,10 @@ func NewExecutor() (*Executor, error) {
 								"name": &graphql.ArgumentConfig{Type: graphql.String, Description: "Name"},
 							},
 							Resolve: hello,
+						},
+						"password": &graphql.Field{
+							Type:    graphql.String,
+							Resolve: password,
 						},
 					},
 				},
@@ -54,4 +68,19 @@ func (e *Executor) Execute(requestString string) ([]byte, error) {
 
 func hello(p graphql.ResolveParams) (interface{}, error) {
 	return ("Hello, " + p.Args["name"].(string) + "!"), nil
+}
+
+func password(p graphql.ResolveParams) (interface{}, error) {
+	chars := "abcdefghijklmnopqrstuvwxyz"
+
+	charsLength := len(chars)
+
+	var ret string
+
+	for i := 0; i < passwordLength; i++ {
+		randomIndex := rand.Intn(charsLength)
+		ret += chars[randomIndex : randomIndex+1]
+	}
+
+	return ret, nil
 }
