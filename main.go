@@ -13,7 +13,7 @@ func main() {
 		log.Fatalf(err.Error())
 	}
 
-	json, err := e.Execute(`{ password }`)
+	json, err := e.Execute(`{ password(useNumber: true) }`)
 	if err != nil {
 		log.Fatalf(err.Error())
 	}

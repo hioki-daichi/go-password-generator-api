@@ -38,7 +38,10 @@ func NewExecutor() (*Executor, error) {
 							Resolve: hello,
 						},
 						"password": &graphql.Field{
-							Type:    graphql.String,
+							Type: graphql.String,
+							Args: graphql.FieldConfigArgument{
+								"useNumber": &graphql.ArgumentConfig{Type: graphql.Boolean, DefaultValue: false, Description: "Use Number"},
+							},
 							Resolve: password,
 						},
 					},
@@ -71,7 +74,12 @@ func hello(p graphql.ResolveParams) (interface{}, error) {
 }
 
 func password(p graphql.ResolveParams) (interface{}, error) {
-	chars := "abcdefghijklmnopqrstuvwxyz"
+	useNumber := p.Args["useNumber"].(bool)
+
+	var chars = "abcdefghijklmnopqrstuvwxyz"
+	if useNumber {
+		chars += "1234567890"
+	}
 
 	charsLength := len(chars)
 
