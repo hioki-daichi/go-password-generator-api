@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/rand"
-	"time"
 
 	"github.com/graphql-go/graphql"
 )
@@ -12,10 +11,6 @@ import (
 const (
 	passwordLength = 16
 )
-
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
 
 // Executor has the information needed to run GraphQL.
 type Executor struct {

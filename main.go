@@ -3,10 +3,16 @@ package main
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
+	"time"
 
 	"github.com/hioki-daichi/password-generator-api/internal/executor"
 )
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
 
 func main() {
 	e, err := executor.NewExecutor()
