@@ -3,13 +3,9 @@ package executor
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
 
 	"github.com/graphql-go/graphql"
-)
-
-const (
-	passwordLength = 16
+	"github.com/hioki-daichi/password-generator-api/internal/generator"
 )
 
 // Executor has the information needed to run GraphQL.
@@ -30,7 +26,9 @@ func NewExecutor() (*Executor, error) {
 							Args: graphql.FieldConfigArgument{
 								"useNumber": &graphql.ArgumentConfig{Type: graphql.Boolean, DefaultValue: false, Description: "Use Number"},
 							},
-							Resolve: password,
+							Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+								return generator.NewGenerator(p).Generate(), nil
+							},
 						},
 					},
 				},
@@ -55,24 +53,4 @@ func (e *Executor) Execute(requestString string) ([]byte, error) {
 	}
 
 	return json.Marshal(result)
-}
-
-func password(p graphql.ResolveParams) (interface{}, error) {
-	useNumber := p.Args["useNumber"].(bool)
-
-	var chars = "abcdefghijklmnopqrstuvwxyz"
-	if useNumber {
-		chars += "1234567890"
-	}
-
-	charsLength := len(chars)
-
-	var ret string
-
-	for i := 0; i < passwordLength; i++ {
-		randomIndex := rand.Intn(charsLength)
-		ret += chars[randomIndex : randomIndex+1]
-	}
-
-	return ret, nil
 }
