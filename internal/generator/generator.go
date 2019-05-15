@@ -1,6 +1,7 @@
 package generator
 
 import (
+	"math"
 	"math/rand"
 
 	"github.com/graphql-go/graphql"
@@ -24,18 +25,35 @@ func NewGenerator(p graphql.ResolveParams) *Generator {
 
 // Generate generates a password.
 func (g *Generator) Generate() interface{} {
-	var chars = "abcdefghijklmnopqrstuvwxyz"
-	if g.useNumber {
-		chars += "1234567890"
+	lFingers := []finger{lIndex, lMiddle, lRing, lChild}
+	rFingers := []finger{rIndex, rMiddle, rRing, rChild}
+
+	lenLFingers := len(lFingers)
+	lenRFingers := len(rFingers)
+
+	rand.Shuffle(lenLFingers, func(i, j int) { lFingers[i], lFingers[j] = lFingers[j], lFingers[i] })
+	rand.Shuffle(lenRFingers, func(i, j int) { rFingers[i], rFingers[j] = rFingers[j], rFingers[i] })
+
+	var fingers []finger
+	for i := 0; i < lenLFingers; i++ {
+		fingers = append(fingers, lFingers[i], rFingers[i])
 	}
 
-	charsLength := len(chars)
+	lenFingers := len(fingers)
 
 	var ret string
 
 	for i := 0; i < passwordLength; i++ {
-		randomIndex := rand.Intn(charsLength)
-		ret += chars[randomIndex : randomIndex+1]
+		f := fingers[int(
+			math.Mod(
+				float64(i),
+				float64(lenFingers),
+			),
+		)]
+
+		keys := f.keys(g.useNumber)
+		idx := rand.Intn(len(keys))
+		ret += keys[idx : idx+1]
 	}
 
 	return ret
