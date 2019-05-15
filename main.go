@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/go-chi/chi"
+	"github.com/go-chi/cors"
 	"github.com/hioki-daichi/password-generator-api/internal/executor"
 )
 
@@ -16,19 +18,23 @@ func init() {
 }
 
 func main() {
-	http.HandleFunc("/graphql", handler)
-	err := http.ListenAndServe(":8080", nil)
+	r := chi.NewRouter()
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"http://localhost:3000"},
+		AllowedMethods: []string{"POST", "OPTIONS"},
+		AllowedHeaders: []string{"Accept", "Authorization", "Content-Type"},
+	})
+	r.Use(c.Handler)
+
+	r.Post("/graphql", handler)
+
+	err := http.ListenAndServe(":8080", r)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
-
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("X-Content-Type-Options", "nosniff")
 
